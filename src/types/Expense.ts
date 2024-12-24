@@ -6,6 +6,7 @@ export type Expense = {
     amount: number,
     type?: string | undefined,
     category?: string | undefined,
-    transactionDate? : string | undefined,
-    postedDate? : string | undefined
+    transactionDate? : Date | undefined,
+    postedDate? : string | undefined,
+    uploadId? : number | undefined
 }

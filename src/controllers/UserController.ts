@@ -19,8 +19,6 @@ export async function getAllUsers(req: Request, res: Response) {
       .find({}, { projection: { _id: 0 } })
       .toArray();
 
-    console.log(users);
-
     res.send(users);
   } catch (err) {
     console.log(err);
@@ -79,12 +77,10 @@ export async function authenticateUser(req: Request, res: Response) {
   const response: ApiResponse<User> = {data: undefined, message: undefined};
   var status = 200
   try {
-    console.log(body)
    const usersCollection = mongoClient.db("finances").collection<User>('users')
 
    const user = await usersCollection.findOne({userId: body.userId},{projection: {_id: 0}})
    
-   console.log(user)
    if(!user || user.password != body.password){
     response.message = 'Incorrect User Id or Password'
     status = 400
@@ -104,22 +100,15 @@ export async function authenticateUser(req: Request, res: Response) {
 }
 
 export async function getUserAccounts(req: Request, res: Response){
-console.log('***************')
   const userId = req.params.userId;
 
   const query: any = {}
 
-  console.log(userId)
-
   query.userId = userId;
-
-  console.log(query)
 
  const userAccountsCollection =  mongoClient.db('finances').collection('user_accounts')
 
  const userAccounts = await userAccountsCollection.findOne(query)
-
- console.log(userAccounts)
 
  res.send(userAccounts)
 }

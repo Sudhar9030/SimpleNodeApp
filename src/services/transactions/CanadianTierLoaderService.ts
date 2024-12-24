@@ -27,7 +27,8 @@ export default class CanadianTierLoaderService extends TransactionLoaderService 
           institutionName: 'CanadianTier',
           userId: req.params.userId,
           type: record[3],
-          category: record[3]
+          category: record[3],
+          uploadId: Number(req.query.uploadId)
         })
       }
 
