@@ -28,6 +28,27 @@ export async function getTransactionByUserId(req: Request, res: Response) {
       query.institutionName = req.query?.institutionName;
     }
 
+    const currentDateTime = new Date()
+
+    var startDate = new Date(currentDateTime.getFullYear(), currentDateTime.getMonth(), 1)
+
+    if(req.query?.startDate){
+      startDate = new Date(String(req.query?.startDate))
+    }
+
+    var endDate: Date = new Date()
+
+    if(req.query?.endDate){
+      endDate = new Date(String(req.query?.endDate))
+    }else{
+      endDate = new Date(currentDateTime.getFullYear(), currentDateTime.getMonth()+1, 0)
+    }
+
+    console.log(startDate)
+    console.log(endDate)
+
+
+
     const account: string = "" + req.query?.institutionName;
 
     const page: number = req.query.page ? Number(req.query.page) : 0;
@@ -38,6 +59,10 @@ export async function getTransactionByUserId(req: Request, res: Response) {
         $match: {
           institutionName: query.institutionName,
           userId: query.userId,
+          transactionDate: {
+            $gte: startDate,
+            $lte: endDate
+          }
         },
       },
       null,
@@ -47,7 +72,8 @@ export async function getTransactionByUserId(req: Request, res: Response) {
 
     logger.info(transactionsQuery);
 
-    const transactions: { data: Array<Expense>; totalCount: number } | null = await transactionsCollection.aggregate<{ data: Array<Expense>; totalCount: number }>(transactionsQuery).next();
+    const transactions: { data: Array<Expense>; totalCount: number } | null = 
+        await transactionsCollection.aggregate<{ data: Array<Expense>; totalCount: number }>(transactionsQuery).next();
 
     response = {
       data: {
